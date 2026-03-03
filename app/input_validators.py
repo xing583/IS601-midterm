@@ -1,14 +1,14 @@
 from __future__ import annotations
 
 from app.exceptions import InvalidInputError, OperationNotSupportedError
-
-SUPPORTED_OPERATIONS = {"add", "subtract", "multiply", "divide", "power", "root"}
+from app.operations import OperationFactory
 
 
 def validate_operation(op: str) -> str:
     """
     LBYL: Look Before You Leap.
     Validate operation name before using it.
+    Dynamically checks OperationFactory so new operations are automatically supported.
     """
     if op is None:
         raise OperationNotSupportedError("Operation is required")
@@ -17,7 +17,7 @@ def validate_operation(op: str) -> str:
     if not op:
         raise OperationNotSupportedError("Operation is required")
 
-    if op not in SUPPORTED_OPERATIONS:
+    if op not in OperationFactory._operations:
         raise OperationNotSupportedError(f"Unsupported operation: {op}")
 
     return op
@@ -34,7 +34,6 @@ def validate_number(value, max_value: float = 1e6) -> float:
     if not s:
         raise InvalidInputError("Number is required")
 
-    # LBYL: attempt conversion in a controlled way
     try:
         num = float(s)
     except ValueError as e:
