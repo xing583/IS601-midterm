@@ -1,163 +1,225 @@
-# Enhanced Calculator (Module 5)
+# IS601 Midterm – Enhanced Calculator
 
-## Overview
+## Project Overview
 
-This project implements an enhanced command-line calculator using Python.
-It demonstrates object-oriented design, multiple design patterns, data persistence with pandas, and automated testing with 100% coverage.
+This project is an enhanced command-line calculator developed for the IS601 Midterm.
+It extends the baseline calculator with advanced features, design patterns, persistent history, logging, and CI integration.
 
----
-
-## Features
-
-* REPL (Read-Eval-Print Loop) interface
-* Arithmetic operations:
-
-  * add, subtract, multiply, divide
-  * power, root
-* History management using pandas DataFrame
-* Save/load history to CSV
-* Undo/redo functionality (Memento pattern)
-* Configuration via environment variables
-* Error handling (EAFP & LBYL)
+The application follows clean Object-Oriented Programming (OOP) principles and enforces high test coverage through automated GitHub Actions.
 
 ---
 
-## Design Patterns
+## Architecture & Design Patterns
 
-* **Facade**: Calculator class provides a unified interface
-* **Factory**: Creates operation objects dynamically
-* **Strategy**: Different operation implementations
-* **Observer**: Tracks history updates
-* **Memento**: Supports undo/redo
+The system implements multiple design patterns:
+
+### Factory Pattern
+`OperationFactory` dynamically creates operation instances based on user input.
+
+### Facade Pattern
+`Calculator` serves as a unified interface coordinating:
+- Operations
+- History management
+- Logging
+- Configuration
+- Memento handling
+
+### Memento Pattern
+Undo/Redo functionality is implemented using `HistoryCaretaker`, storing DataFrame snapshots.
+
+### Observer Pattern
+Observers respond to calculation events (e.g., logging operations).
+
+---
+
+## Supported Operations
+
+### Basic Operations
+- `add`
+- `subtract`
+- `multiply`
+- `divide`
+- `power`
+- `root`
+
+### Additional Midterm Operations
+- `modulus`
+- `int_divide`
+- `percent`
+- `abs_diff`
+
+### Example Usage
+```
+add 1 2
+modulus 10 3
+percent 50 200
+abs_diff 10 25
+```
 
 ---
 
 ## Project Structure
 
 ```
-module5_calculator/
+IS601-midterm/
 │
 ├── app/
-│   ├── calculator_repl.py
+│   ├── __init__.py
 │   ├── calculation.py
+│   ├── calculator.py
 │   ├── calculator_config.py
 │   ├── calculator_memento.py
 │   ├── exceptions.py
 │   ├── history.py
 │   ├── input_validators.py
-│   ├── operations.py
+│   ├── logger.py
+│   ├── observers.py
+│   └── operations.py
 │
 ├── tests/
 │   ├── test_calculations.py
 │   ├── test_calculator_config.py
 │   ├── test_calculator_memento.py
+│   ├── test_calculator_repl_run_and_a...
 │   ├── test_calculator_repl.py
-│   ├── test_calculator_repl_run_and_autoload.py
+│   ├── test_coverage_missing_lines.py
 │   ├── test_exceptions.py
 │   ├── test_history.py
 │   ├── test_input_validators.py
-│   ├── test_operations.py
+│   └── test_operations.py
 │
+├── .github/
+│   └── workflows/
+│       └── python-app.yml
+│
+├── history/
+├── logs/
+├── venv/
+├── .coverage
+├── .env
+├── .gitignore
+├── history.csv
 ├── main.py
-├── requirements.txt
 ├── pytest.ini
-└── README.md
+├── README.md
+└── requirements.txt
 ```
 
 ---
 
-## Setup
+## Installation
 
-Clone the repository:
-
-```
-git clone https://github.com/xing583/module5_calculator.git
-cd module5_calculator
-```
-
-Create and activate virtual environment:
-
-```
+Create a virtual environment:
+```bash
 python -m venv venv
 source venv/bin/activate
 ```
 
 Install dependencies:
-
-```
+```bash
 pip install -r requirements.txt
 ```
 
 ---
 
-## Run
+## Configuration
 
+The application uses environment-based configuration.
+
+Create a `.env` file (or copy from `.env.example`):
 ```
+MAX_HISTORY_SIZE=100
+PRECISION=2
+AUTO_SAVE=True
+LOG_LEVEL=INFO
+```
+
+---
+
+## Running the Application
+
+Start the calculator:
+```bash
 python main.py
 ```
 
----
-
-## Testing
-
-Run tests:
-
+Available commands:
 ```
-pytest -q
-```
-
-Run coverage:
-
-```
-pytest --cov=app tests/
-coverage report --fail-under=100
-```
-
-This project achieves **100% test coverage**.
-
----
-
-## CI (GitHub Actions)
-
-GitHub Actions is configured to:
-
-* Run tests automatically on push
-* Check 100% coverage
-* Fail the build if coverage is below 100%
-
-Workflow file:
-
-```
-.github/workflows/python-app.yml
-```
-
----
-
-## Example Commands
-
-```
-add 1 2
-subtract 5 3
+help
 history
+clear
 undo
 redo
-clear
-save history.csv
-load history.csv
+save <file.csv>
+load <file.csv>
 exit
 ```
 
 ---
 
-## Notes
+## Running Tests
 
-* History is stored using pandas DataFrame
-* Data is persisted in CSV files
-* The application is modular and testable
+Run unit tests with coverage enforcement:
+```bash
+pytest --cov=app --cov-fail-under=90
+```
+
+- Minimum required coverage: **90%**
+- Current coverage: ≥ 90%
+- All tests pass successfully
 
 ---
 
-## Course
+## GitHub Actions (CI)
 
-NJIT IS601 - Web Systems Development
-Assignment: Module 5 Enhanced Calculator
+GitHub Actions automatically:
+
+- Installs dependencies
+- Runs unit tests
+- Enforces coverage ≥ 90%
+- Fails the build if requirements are not met
+
+---
+
+## Error Handling
+
+The application gracefully handles:
+
+- Invalid numeric inputs
+- Unsupported operations
+- Division by zero
+- Invalid file paths
+- Undo/Redo edge cases
+
+Custom exception classes ensure robust error management.
+
+---
+
+## Logging
+
+The logging system records:
+
+- Operation name
+- Input values
+- Calculation results
+- Errors
+- Timestamps
+
+Logging level is configurable via environment variables.
+
+---
+
+## Optional Enhancements Implemented
+
+- Observer-based logging
+- Color-coded CLI output
+- Dynamic help menu
+- Configurable precision and history size
+- Persistent CSV history with autosave
+
+---
+
+## Author
+
+Xing Li
+IS601 – Midterm Project
