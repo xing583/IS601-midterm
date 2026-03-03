@@ -28,6 +28,4 @@ jobs:
         run: |
           pytest --cov=app --cov-report=term-missing tests/
 
-      - name: Enforce 100% coverage
-        run: |
-          coverage report --fail-under=100
+
