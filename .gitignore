@@ -1,0 +1,13 @@
+# virtual environment
+venv/
+
+# python cache
+__pycache__/
+*.pyc
+
+# pytest / coverage
+.coverage
+.pytest_cache/
+
+# data files
+*.csv
